@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novembro Azul - Conscientização sobre o Câncer de Próstata</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Incluir Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --azul-principal: #007bff;
+            --azul-claro: #cce5ff;
+            --azul-escuro: #0056b3;
+            --cinza-claro: #f8f9fa;
+            --cinza-escuro: #343a40;
+            --branco: #ffffff;
+            --verde-sucesso: #28a745;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--cinza-claro);
+            color: var(--cinza-escuro);
+            line-height: 1.6;
+            position: relative; /* Para o botão voltar ao topo */
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--azul-principal), var(--azul-escuro));
+            color: var(--branco);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background-color: var(--branco);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 1rem;
+        }
+        
+        .logo i {
+            color: var(--azul-principal);
+            font-size: 2.5rem;
+            font-style: normal;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        nav {
+            background-color: var(--branco);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link {
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            color: var(--cinza-escuro);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .nav-link:hover {
+            background-color: var(--azul-claro);
+            color: var(--azul-escuro);
+        }
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--azul-escuro);
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+        
+        .hamburger.active span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+        
+        section {
+            padding: 3rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--azul-escuro);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background-color: var(--azul-principal);
+            margin: 0.5rem auto;
+        }
+        
+        .card {
+            background-color: var(--branco);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--azul-principal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--cinza-escuro);
+        }
+        
+        .chart-container { height: 500px; margin-bottom: 2rem; }
+        
+        .insight-box {
+            background-color: var(--azul-claro);
+            border-left: 4px solid var(--azul-principal);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .insight-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--azul-escuro);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .info-item { display: flex; align-items: flex-start; }
+        
+        .info-icon {
+            background-color: var(--azul-claro);
+            color: var(--azul-principal);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            font-style: normal;
+            font-size: 1.2rem; /* Ajuste para ícones Font Awesome */
+        }
+
+        .info-icon i {
+            color: var(--azul-principal);
+        }
+        
+        footer {
+            background-color: var(--cinza-escuro);
+            color: var(--branco);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .footer-link { color: var(--branco); text-decoration: none; }
+        .footer-link:hover { text-decoration: underline; }
+        
+        .copyright {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .lgpd-notice {
+            background-color: var(--azul-claro);
+            border: 2px solid var(--azul-principal);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .lgpd-header {
+            background-color: var(--azul-escuro);
+            color: var(--branco);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        
+        .data-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+        .data-table th, .data-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd; }
+        .data-table th { background-color: var(--azul-claro); color: var(--azul-escuro); font-weight: 600; }
+        .data-table tr:hover { background-color: rgba(0, 123, 255, 0.05); }
+        .table-container { overflow-x: auto; margin: 1.5rem 0; }
+        .table-title { margin-bottom: 1rem; color: var(--azul-escuro); text-align: center; }
+        
+        .series-selector { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .series-checkbox { display: flex; align-items: center; margin-right: 1rem; }
+        .series-checkbox input { margin-right: 0.25rem; }
+
+        /* Estilos para o CTA */
+        .cta-button {
+            display: inline-block;
+            background-color: var(--verde-sucesso);
+            color: var(--branco);
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            background-color: #218838; /* Um verde um pouco mais escuro */
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para o botão Voltar ao Topo */
+        #scrollToTopBtn {
+            display: none; /* Escondido por padrão */
+            position: fixed; /* Posição fixa */
+            bottom: 20px; /* 20px do fundo */
+            right: 20px; /* 20px da direita */
+            z-index: 999; /* Garante que fique acima de outros elementos */
+            border: none; /* Remove a borda */
+            outline: none; /* Remove o contorno ao focar */
+            background-color: var(--azul-principal); /* Cor de fundo */
+            color: white; /* Cor do texto/ícone */
+            cursor: pointer; /* Cursor de clique */
+            padding: 15px; /* Espaçamento */
+            border-radius: 50%; /* Formato circular */
+            font-size: 1.5rem; /* Tamanho do ícone */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        #scrollToTopBtn:hover {
+            background-color: var(--azul-escuro);
+        }
+
+        /* Estilos para Tooltips */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            border-bottom: 1px dotted var(--azul-principal); /* Para indicar que é clicável/interativo */
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 250px;
+            background-color: var(--cinza-escuro);
+            color: var(--branco);
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Posição acima do texto */
+            left: 50%;
+            margin-left: -125px; /* Centraliza o tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%; /* Na parte inferior */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--cinza-escuro) transparent transparent transparent;
+        }
+
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Estilos para o Funil Diagnóstico SVG */
+        .funnel-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 1.5rem;
+            gap: 0.5rem;
+        }
+        .funnel-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            color: var(--cinza-escuro);
+        }
+        .funnel-step-label {
+            min-width: 150px; /* Garante alinhamento */
+            text-align: right;
+        }
+        .funnel-value {
+            color: var(--azul-principal);
+            min-width: 80px;
+            text-align: left;
+        }
+        .funnel-svg {
+            margin-top: 1rem;
+            max-width: 100%;
+            height: auto;
+        }
+        .funnel-svg text {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12px;
+            fill: #333;
+        }
+        .funnel-svg .step-bar {
+            fill: var(--azul-principal);
+            opacity: 0.8;
+            transition: fill 0.3s ease;
+        }
+        .funnel-svg .step-bar:hover {
+            fill: var(--azul-escuro);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .nav-links { position: fixed; top: 60px; left: -100%; width: 100%; background-color: var(--branco); flex-direction: column; box-shadow: 0 5px 10px rgba(0,0,0,0.1); transition: left 0.3s ease; }
+            .nav-links.active { left: 0; }
+            .nav-link { padding: 1rem; border-bottom: 1px solid var(--azul-claro); text-align: center; }
+            .hamburger { display: flex; }
+            .chart-container { height: 400px; }
+            .series-selector { justify-content: center; }
+            #scrollToTopBtn {
+                padding: 12px;
+                font-size: 1.2rem;
+                bottom: 15px;
+                right: 15px;
+            }
+            .tooltip-text {
+                width: 200px;
+                margin-left: -100px;
+                left: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-male"></i> <!-- Ícone Font Awesome para homem -->
+            </div>
+            <div>
+                <h1>Novembro Azul</h1>
+                <p class="subtitle">Mês Mundial de Combate ao Câncer de Próstata</p>
+            </div>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="nav-container">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#sobre" class="nav-link">Sobre</a>
+                <a href="#dados" class="nav-link">Dados de Saúde</a>
+                <a href="#prevencao" class="nav-link">Prevenção</a>
+                <a href="#diagnostico" class="nav-link">Diagnóstico</a>
+                <a href="#privacidade" class="nav-link">Privacidade</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main>
+        <section id="sobre">
+            <h2 class="section-title">Sobre o Novembro Azul</h2>
+            <div class="card">
+                <p>Novembro Azul é um movimento internacional que acontece durante o mês de novembro para reforçar a importância da prevenção e do <span class="tooltip-container">diagnóstico precoce<span class="tooltip-text">Identificação da doença em estágios iniciais, o que aumenta as chances de cura.</span></span> do <span class="tooltip-container">câncer de próstata<span class="tooltip-text">Tipo de câncer que se desenvolve na próstata, uma glândula do sistema reprodutor masculino.</span></span>.</p>
+                <p>A doença é o tipo de câncer mais comum entre os homens no Brasil (depois do câncer de pele não-melanoma). A campanha busca quebrar o preconceito masculino de ir ao médico e incentivar a realização dos exames preventivos.</p>
+                
+                <div class="grid-2" style="margin-top: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-number">71.730</div>
+                        <div class="stat-label">Novos casos estimados por ano no Brasil (2023-2025)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">1º</div>
+                        <div class="stat-label">Posição entre os tipos de câncer mais comuns em homens</div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 2.5rem;">
+                    <a href="#prevencao" class="cta-button">Saiba Como Prevenir e Agir!</a>
+                </div>
+            </div>
+        </section>
+        
+        <section id="dados">
+            <h2 class="section-title">Dados de Procedimentos - Juiz de Fora/MG</h2>
+            <div class="card">
+                <p>Os dados abaixo, extraídos do Tabnet (SIA/SUS), mostram o volume mensal de procedimentos realizados em Juiz de Fora/MG (Jan-Ago 2025, dados simulados). Eles ilustram a jornada do paciente desde a consulta inicial até a confirmação diagnóstica.</p>
+                
+                <div class="series-selector" id="seriesSelector" style="justify-content: center; margin-bottom: 1.5rem;">
+                    <!-- Checkboxes gerados pelo JS -->
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="mainChart"></canvas>
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-title">Análise do Funil Diagnóstico</div>
+                    <p id="insight-text">Os dados revelam um fluxo de cuidado lógico e eficiente. O grande volume de <strong>consultas especializadas</strong> representa a porta de entrada para a avaliação da saúde. Deste total, uma parte avança para o rastreamento com <strong>exames de <span class="tooltip-container">PSA<span class="tooltip-text">Antígeno Prostático Específico. Uma proteína produzida pela próstata, medida por exame de sangue. Níveis elevados podem indicar problemas na próstata.</span></span></strong>. Finalmente, apenas uma pequena fração com alta suspeita realiza a <strong><span class="tooltip-container">biópsia<span class="tooltip-text">Procedimento médico que remove uma pequena amostra de tecido para análise laboratorial, essencial para confirmar o diagnóstico de câncer.</span></span></strong> para confirmação. Isso demonstra que o sistema de saúde funciona como um filtro, focando os procedimentos mais complexos apenas nos casos realmente necessários.</p>
+                    
+                    <!-- Funil Diagnóstico SVG -->
+                    <div class="funnel-container">
+                        <svg class="funnel-svg" width="300" height="200" viewBox="0 0 300 200">
+                            <!-- Consultas -->
+                            <polygon points="0,0 300,0 250,50 50,50" fill="#007bff" opacity="0.8" class="step-bar"/>
+                            <text x="150" y="25" text-anchor="middle" fill="white" font-weight="bold">Consultas Especializadas</text>
+                            
+                            <!-- PSA -->
+                            <polygon points="50,55 250,55 200,105 100,105" fill="#17a2b8" opacity="0.8" class="step-bar"/>
+                            <text x="150" y="80" text-anchor="middle" fill="white" font-weight="bold">Exames de PSA</text>
+
+                            <!-- Biópsias -->
+                            <polygon points="100,110 200,110 175,160 125,160" fill="#28a745" opacity="0.8" class="step-bar"/>
+                            <text x="150" y="135" text-anchor="middle" fill="white" font-weight="bold">Biópsias de Próstata</text>
+
+                            <!-- Setas para baixo -->
+                            <line x1="150" y1="50" x2="150" y2="55" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <line x1="150" y1="105" x2="150" y2="110" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                            <!-- Definição da ponta da seta -->
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+                                </marker>
+                            </defs>
+                        </svg>
+                        <p style="font-size: 0.9em; color: var(--cinza-escuro);">*Representação simplificada do fluxo diagnóstico.</p>
+                    </div>
+                </div>
+                
+                <h3 class="table-title" id="tableTitle">Tabela de Dados Detalhados por Mês</h3>
+                <div class="table-container">
+                    <table class="data-table" id="dataTable">
+                        <!-- Tabela gerada pelo JS -->
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <section id="prevencao">
+            <h2 class="section-title">Prevenção e Fatores de Risco</h2>
+            <div class="card">
+                <p>A <span class="tooltip-container">detecção precoce<span class="tooltip-text">Identificação da doença em estágios iniciais, o que aumenta as chances de cura.</span></span> é a chave para o tratamento bem-sucedido do <span class="tooltip-container">câncer de próstata<span class="tooltip-text">Tipo de câncer que se desenvolve na próstata, uma glândula do sistema reprodutor masculino.</span></span>. Homens a partir de 50 anos (ou 45, se houver fatores de risco) devem conversar com seu médico sobre o rastreamento.</p>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-notes-medical"></i></div>
+                        <div>
+                            <h3>Sintomas de Alerta</h3>
+                            <p>Fique atento a dificuldades para urinar, necessidade de urinar mais vezes, diminuição do jato de urina ou sangue na urina. Na fase inicial, pode não haver sintomas.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-hand-holding-medical"></i></div>
+                        <div>
+                            <h3>Exame de Toque Retal</h3>
+                            <p>O médico avalia tamanho, forma e textura da <span class="tooltip-container">próstata<span class="tooltip-text">Glândula masculina localizada abaixo da bexiga, que produz parte do líquido seminal.</span></span>. É um exame rápido e essencial, que pode detectar anomalias.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-vial"></i></div>
+                        <div>
+                            <h3>Exame de <span class="tooltip-container">PSA<span class="tooltip-text">Antígeno Prostático Específico. Uma proteína produzida pela próstata, medida por exame de sangue. Níveis elevados podem indicar problemas na próstata.</span></span></h3>
+                            <p>Um exame de sangue que mede a quantidade do Antígeno Prostático Específico. Níveis altos podem indicar problemas na <span class="tooltip-container">próstata<span class="tooltip-text">Glândula masculina localizada abaixo da bexiga, que produz parte do líquido seminal.</span></span>.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-apple-alt"></i></div>
+                        <div>
+                            <h3>Hábitos Saudáveis</h3>
+                            <p>Uma dieta rica em frutas, verduras e grãos, e pobre em gordura, além da prática de exercícios, ajuda a diminuir o risco.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <div class="insight-title">Principais Fatores de Risco</div>
+                    <div class="info-grid" style="margin-top: 1rem; gap: 1rem;">
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div>
+                                <h3>Idade</h3>
+                                <p>Risco aumenta significativamente após os 50 anos.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-users"></i></div>
+                            <div>
+                                <h3>História Familiar</h3>
+                                <p>Pai ou irmão com a doença antes dos 60 anos aumenta o risco.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-user-friends"></i></div>
+                            <div>
+                                <h3>Raça/Etnia</h3>
+                                <p>Maior incidência em homens negros.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="diagnostico">
+            <h2 class="section-title">Diagnóstico e Tratamento</h2>
+            <div class="card">
+                <p>Se os exames de rastreamento (Toque e <span class="tooltip-container">PSA<span class="tooltip-text">Antígeno Prostático Específico. Uma proteína produzida pela próstata, medida por exame de sangue. Níveis elevados podem indicar problemas na próstata.</span></span>) apresentarem alterações, o médico poderá solicitar outros exames para confirmar o <span class="tooltip-container">diagnóstico<span class="tooltip-text">Processo de identificar a natureza de uma doença através de seus sinais e sintomas.</span></span>, sendo a <span class="tooltip-container">biópsia<span class="tooltip-text">Procedimento médico que remove uma pequena amostra de tecido para análise laboratorial, essencial para confirmar o diagnóstico de câncer.</span></span> o principal deles.</p>
+                
+                <h3 style="margin-top: 1.5rem; color: var(--azul-escuro);">Opções de Tratamento</h3>
+                <p>O <span class="tooltip-container">tratamento<span class="tooltip-text">Conjunto de medidas terapêuticas aplicadas para combater uma doença ou aliviar seus sintomas.</span></span> é individualizado e depende do estágio da doença. As opções incluem:</p>
+                <ul style="margin: 1rem 0 1rem 2rem;">
+                    <li><span class="tooltip-container">Vigilância Ativa<span class="tooltip-text">Monitoramento cuidadoso de tumores de baixa agressividade, evitando tratamentos imediatos e seus efeitos colaterais.</span></span> (para tumores de baixa agressividade)</li>
+                    <li>Cirurgia (<span class="tooltip-container">Prostatectomia Radical<span class="tooltip-text">Cirurgia para remover toda a glândula prostática e, por vezes, os gânglios linfáticos próximos, para tratar o câncer de próstata.</span></span>)</li>
+                    <li><span class="tooltip-container">Radioterapia<span class="tooltip-text">Uso de radiação de alta energia para destruir células cancerosas.</span></span></li>
+                    <li><span class="tooltip-container">Hormonioterapia<span class="tooltip-text">Tratamento que visa bloquear a produção ou ação de hormônios masculinos (testosterona), que podem estimular o crescimento do câncer de próstata.</span></span></li>
+                    <li><span class="tooltip-container">Quimioterapia<span class="tooltip-text">Uso de medicamentos para destruir células cancerosas, geralmente administrados por via intravenosa ou oral.</span></span></li>
+                </ul>
+                
+                <div class="insight-box">
+                    <div class="insight-title">Entendendo a Escala de <span class="tooltip-container">Gleason<span class="tooltip-text">Sistema de pontuação usado para classificar a agressividade do câncer de próstata com base na aparência das células sob o microscópio.</span></span></div>
+                    <p>Após a <span class="tooltip-container">biópsia<span class="tooltip-text">Procedimento médico que remove uma pequena amostra de tecido para análise laboratorial, essencial para confirmar o diagnóstico de câncer.</span></span>, o câncer é classificado pela <strong>Escala de Gleason</strong>, que indica o grau de agressividade do tumor. A pontuação vai de 2 a 10.</p>
+                    <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                        <li><strong>Gleason 6:</strong> Câncer de baixa agressividade, geralmente com bom prognóstico.</li>
+                        <li><strong>Gleason 7:</strong> Agressividade intermediária.</li>
+                        <li><strong>Gleason 8 a 10:</strong> Câncer de alta agressividade, com maior probabilidade de crescimento e <span class="tooltip-container">metástase<span class="tooltip-text">Disseminação de células cancerosas de um local original para outras partes do corpo, formando novos tumores.</span></span>.</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;">Essa pontuação é fundamental para decidir o melhor tratamento a ser seguido.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="privacidade">
+            <h2 class="section-title">Privacidade e Proteção de Dados</h2>
+            <div class="card">
+                <div class="lgpd-notice">
+                    <div class="lgpd-header">🔒 COMPROMISSO COM A LGPD</div>
+                    <p>Esta plataforma educacional foi desenvolvida em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018). Nosso compromisso é com a sua privacidade e segurança.</p>
+                    
+                    <h3 style="margin-top: 1.5rem; color: var(--azul-escuro);">Quais dados não coletamos?</h3>
+                    <ul style="margin: 1rem 0 1rem 2rem; text-align: left;">
+                        <li>Não utilizamos cookies de rastreamento ou de terceiros.</li>
+                        <li>Não coletamos nenhum dado pessoal identificável (nome, e-mail, CPF, etc.) dos usuários.</li>
+                        <li>Não solicitamos informações de contato ou cadastro.</li>
+                        <li>Não armazenamos histórico de navegação individual.</li>
+                    </ul>
+
+                    <h3 style="margin-top: 1.5rem; color: var(--azul-escuro);">Fontes dos dados exibidos:</h3>
+                    <p style="text
